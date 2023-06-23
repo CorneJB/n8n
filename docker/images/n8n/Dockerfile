@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/nodejs-12:latest
+FROM registry.access.redhat.com/ubi8/nodejs-16:latest
 
 ARG N8N_VERSION
 
