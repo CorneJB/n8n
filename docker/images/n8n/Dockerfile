@@ -1,33 +1,25 @@
-FROM node:16-alpine
+FROM registry.access.redhat.com/ubi8/nodejs-12:latest
 
-ARG N8N_VERSION=0.231.3 
+ARG N8N_VERSION
 
-RUN if [ -z "$N8N_VERSION" ] ; then echo "The N8N_VERSION argument is missing!" ; exit 1; fi
+ENV HOME=/opt/app-root/src \
+    TZ=America/Vancouver
 
-# Update everything and install needed dependencies
-RUN apk add --update graphicsmagick tzdata git tini su-exec
+RUN mkdir -p $HOME
 
-# Install fonts
-RUN apk --no-cache add --virtual fonts msttcorefonts-installer fontconfig && \
-	  update-ms-fonts && \
-	  fc-cache -f && \
-	  apk del fonts && \
-	  find  /usr/share/fonts/truetype/msttcorefonts/ -type l -exec unlink {} \; \
-  	&& rm -rf /root /tmp/* /var/cache/apk/* && mkdir /root && \
-    apk --update add --virtual build-dependencies python3 build-base ca-certificates 
+WORKDIR $HOME
 
+# If you are building your code for production
+# RUN npm install --only=production
+RUN npm install request -g && \
+    npm install -g n8n@${N8N_VERSION}
 
-# Install n8n and the packages it needs to build it correctly.
-RUN npm config set python "$(which python3)" && \
-	  npm_config_user=root npm install -g full-icu n8n@${N8N_VERSION} && \
-	  apk del build-dependencies
+ENV PATH ${HOME}/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 
-ENV NODE_ICU_DATA /usr/local/lib/node_modules/full-icu
-
+VOLUME ${HOME}
+VOLUME [ "/data" ]
 WORKDIR /data
 
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-USER node
-ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
-
 EXPOSE 5678/tcp
+
+CMD ["n8n"]
