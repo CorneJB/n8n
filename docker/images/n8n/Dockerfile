@@ -16,8 +16,6 @@ RUN apk --no-cache add --virtual fonts msttcorefonts-installer fontconfig && \
   	&& rm -rf /root /tmp/* /var/cache/apk/* && mkdir /root && \
     apk --update add --virtual build-dependencies python3 build-base ca-certificates 
 
-# Set a custom user to not have n8n run as root
-USER node
 
 # Install n8n and the packages it needs to build it correctly.
 RUN npm config set python "$(which python3)" && \
@@ -29,6 +27,7 @@ ENV NODE_ICU_DATA /usr/local/lib/node_modules/full-icu
 WORKDIR /data
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
+USER node
 ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
 
 EXPOSE 5678/tcp
