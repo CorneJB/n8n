@@ -16,10 +16,10 @@ RUN set -eux; \
 	'armv7') apk del build-dependencies;; \
 	esac && \
 	find /usr/local/lib/node_modules/n8n -type f -name "*.ts" -o -name "*.js.map" -o -name "*.vue" | xargs rm && \
-	rm -rf /root/.npm \
-  chown -R node /home/node \
-	chmod o+rx /root \
-  chown -R node /root/.n8n \
+	rm -rf /root/.npm && \
+  chown -R node /home/node && \
+	chmod o+rx /root && \
+  chown -R node /root/.n8n && \
   ln -s /root/.n8n /home/node/
 
 # Set a custom user to not have n8n run as root
