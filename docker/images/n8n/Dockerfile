@@ -3,7 +3,7 @@ FROM registry.access.redhat.com/ubi8/nodejs-16:latest
 ARG N8N_VERSION
 
 ENV HOME=/opt/app-root/src \
-    TZ=America/Vancouver
+    TZ=Europe/Amsterdam
 
 RUN mkdir -p $HOME
 
