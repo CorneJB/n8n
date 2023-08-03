@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi8/nodejs-18:latest
 
-ARG N8N_VERSION
+ARG N8N_VERSION=1.1.1
 
 ENV HOME=/opt/app-root/src \
     TZ=Europe/Amsterdam
